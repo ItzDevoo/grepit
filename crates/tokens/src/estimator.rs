@@ -31,7 +31,31 @@ fn is_code(text: &str) -> bool {
     let total = text.len() as f64;
     let code_chars = text
         .bytes()
-        .filter(|&b| matches!(b, b'{' | b'}' | b'(' | b')' | b'[' | b']' | b';' | b'=' | b'<' | b'>' | b'|' | b'&' | b'!' | b'+' | b'-' | b'*' | b'/' | b':' | b',' | b'.' | b'_'))
+        .filter(|&b| {
+            matches!(
+                b,
+                b'{' | b'}'
+                    | b'('
+                    | b')'
+                    | b'['
+                    | b']'
+                    | b';'
+                    | b'='
+                    | b'<'
+                    | b'>'
+                    | b'|'
+                    | b'&'
+                    | b'!'
+                    | b'+'
+                    | b'-'
+                    | b'*'
+                    | b'/'
+                    | b':'
+                    | b','
+                    | b'.'
+                    | b'_'
+            )
+        })
         .count() as f64;
 
     // If more than 8% of characters are code-like punctuation, it's code
@@ -58,7 +82,9 @@ mod tests {
     fn test_code_detection() {
         assert!(is_code("fn main() { let x = 42; }"));
         assert!(is_code("if (x > 0) { return x + 1; }"));
-        assert!(!is_code("This is a normal English sentence about programming"));
+        assert!(!is_code(
+            "This is a normal English sentence about programming"
+        ));
         assert!(!is_code("The quick brown fox jumps over the lazy dog"));
     }
 

@@ -244,10 +244,10 @@ mod tests {
         // and keeps trying smaller ones, unlike simple truncation which stops.
         let big_line = "x".repeat(300);
         let matches = vec![
-            make_contextual_match("a.rs", "short line a", 0.9),          // small, fits
-            make_contextual_match("b.rs", &big_line, 0.8),              // BIG, won't fit
-            make_contextual_match("c.rs", "short line c", 0.7),          // small, fits after skip
-            make_contextual_match("d.rs", "short line d", 0.6),          // small, fits after skip
+            make_contextual_match("a.rs", "short line a", 0.9), // small, fits
+            make_contextual_match("b.rs", &big_line, 0.8),      // BIG, won't fit
+            make_contextual_match("c.rs", "short line c", 0.7), // small, fits after skip
+            make_contextual_match("d.rs", "short line d", 0.6), // small, fits after skip
         ];
 
         // Budget big enough for ~3 small results but not the big one
@@ -272,19 +272,17 @@ mod tests {
         );
 
         // Verify the total relevance score is higher than just the first result
-        let total_score: f64 = results.iter()
-            .map(|r| r["score"].as_f64().unwrap())
-            .sum();
-        assert!(total_score > 0.9, "Total score should exceed first result's score");
+        let total_score: f64 = results.iter().map(|r| r["score"].as_f64().unwrap()).sum();
+        assert!(
+            total_score > 0.9,
+            "Total score should exceed first result's score"
+        );
     }
 
     #[test]
     fn test_path_separators_normalized() {
-        let match_with_backslash = make_contextual_match(
-            "src\\auth\\login.rs",
-            "pub fn authenticate() {",
-            0.9,
-        );
+        let match_with_backslash =
+            make_contextual_match("src\\auth\\login.rs", "pub fn authenticate() {", 0.9);
 
         let config = OutputConfig {
             show_stats: false,
@@ -302,7 +300,10 @@ mod tests {
             !path.contains('\\'),
             "Path should use forward slashes, got: {path}"
         );
-        assert!(path.contains('/'), "Path should contain forward slashes: {path}");
+        assert!(
+            path.contains('/'),
+            "Path should contain forward slashes: {path}"
+        );
     }
 
     #[test]
