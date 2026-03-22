@@ -31,7 +31,7 @@ impl std::str::FromStr for OutputFormat {
             "jsonl" | "jsonlines" => Ok(Self::JsonLines),
             "compact" => Ok(Self::Compact),
             "human" => Ok(Self::Human),
-            _ => Err(format!("Unknown output format: '{}'. Expected: json, jsonl, compact, human", s)),
+            _ => Err(format!("Unknown output format: '{s}'. Expected: json, jsonl, compact, human")),
         }
     }
 }

@@ -30,7 +30,7 @@ pub fn write_compact<W: Write>(
             }
         }
 
-        writeln!(writer, "{}", line)?;
+        writeln!(writer, "{line}")?;
     }
 
     Ok(())

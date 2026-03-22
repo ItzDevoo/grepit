@@ -48,7 +48,7 @@ pub fn write_jsonl<W: Write>(
             }
         }
 
-        writeln!(writer, "{}", line)?;
+        writeln!(writer, "{line}")?;
     }
 
     Ok(())

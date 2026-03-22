@@ -1,6 +1,6 @@
 //! Regex matching with position tracking.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// A single match found in a file.
 #[derive(Debug, Clone)]
@@ -23,7 +23,7 @@ pub struct RawMatch {
 /// Search a file's content (as bytes) for matches against a compiled regex.
 /// Returns all matches found.
 pub fn find_matches(
-    path: &PathBuf,
+    path: &Path,
     content: &[u8],
     regex: &regex::Regex,
     max_count: Option<usize>,
@@ -48,7 +48,7 @@ pub fn find_matches(
 
         if let Some(m) = regex.find(line) {
             matches.push(RawMatch {
-                path: path.clone(),
+                path: path.to_path_buf(),
                 line_number: (line_idx + 1) as u64,
                 column: (m.start() + 1) as u64,
                 line_content: line.to_string(),

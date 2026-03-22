@@ -52,7 +52,7 @@ impl SearchEngine {
         let compiled_regex = regex::RegexBuilder::new(&pattern)
             .case_insensitive(config.ignore_case)
             .build()
-            .map_err(|e| anyhow::anyhow!("Invalid regex pattern: {}", e))?;
+            .map_err(|e| anyhow::anyhow!("Invalid regex pattern: {e}"))?;
 
         Ok(Self {
             config,
@@ -69,7 +69,7 @@ impl SearchEngine {
         };
 
         if config.word_boundary {
-            pattern = format!(r"\b{}\b", pattern);
+            pattern = format!(r"\b{pattern}\b");
         }
 
         pattern

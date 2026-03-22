@@ -55,12 +55,12 @@ fn compute_word_boundary(raw: &RawMatch) -> f32 {
     let match_end = col + raw.match_text.len();
 
     let left_boundary = col == 0
-        || line.as_bytes().get(col - 1).map_or(true, |&b| !b.is_ascii_alphanumeric() && b != b'_');
+        || line.as_bytes().get(col - 1).is_none_or(|&b| !b.is_ascii_alphanumeric() && b != b'_');
     let right_boundary = match_end >= line.len()
         || line
             .as_bytes()
             .get(match_end)
-            .map_or(true, |&b| !b.is_ascii_alphanumeric() && b != b'_');
+            .is_none_or(|&b| !b.is_ascii_alphanumeric() && b != b'_');
 
     if left_boundary && right_boundary {
         1.0

@@ -87,7 +87,7 @@ impl Walker {
 
                         // Skip directories
                         let ft = entry.file_type();
-                        if ft.map_or(true, |t| !t.is_file()) {
+                        if ft.is_none_or(|t| !t.is_file()) {
                             return ignore::WalkState::Continue;
                         }
 

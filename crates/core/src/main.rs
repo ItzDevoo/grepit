@@ -14,7 +14,7 @@ fn main() {
     let args = cli::Args::parse();
 
     if let Err(e) = app::run(args) {
-        eprintln!("grepit: {}", e);
+        eprintln!("grepit: {e}");
         std::process::exit(1);
     }
 }
