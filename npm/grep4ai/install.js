@@ -12,11 +12,11 @@ const os = require("os");
 
 // Map Node.js platform/arch to our package names
 const PLATFORMS = {
-  "win32-x64": "grepit-win32-x64",
-  "linux-x64": "grepit-linux-x64",
-  "linux-arm64": "grepit-linux-arm64",
-  "darwin-x64": "grepit-darwin-x64",
-  "darwin-arm64": "grepit-darwin-arm64",
+  "win32-x64": "@grep4ai/win32-x64",
+  "linux-x64": "@grep4ai/linux-x64",
+  "linux-arm64": "@grep4ai/linux-arm64",
+  "darwin-x64": "@grep4ai/darwin-x64",
+  "darwin-arm64": "@grep4ai/darwin-arm64",
 };
 
 function getPlatformPackage() {

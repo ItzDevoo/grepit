@@ -21,23 +21,23 @@ jobs:
         include:
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            npm_pkg: grepit-win32-x64
+            npm_pkg: grep4ai-win32-x64
             binary: grep4ai.exe
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            npm_pkg: grepit-linux-x64
+            npm_pkg: grep4ai-linux-x64
             binary: grep4ai
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
-            npm_pkg: grepit-linux-arm64
+            npm_pkg: grep4ai-linux-arm64
             binary: grep4ai
           - target: x86_64-apple-darwin
             os: macos-latest
-            npm_pkg: grepit-darwin-x64
+            npm_pkg: grep4ai-darwin-x64
             binary: grep4ai
           - target: aarch64-apple-darwin
             os: macos-latest
-            npm_pkg: grepit-darwin-arm64
+            npm_pkg: grep4ai-darwin-arm64
             binary: grep4ai
 
     steps:
@@ -133,7 +133,7 @@ jobs:
       # Copy built binaries into npm package dirs
       - name: Prepare packages
         run: |
-          for pkg in grepit-win32-x64 grepit-linux-x64 grepit-linux-arm64 grepit-darwin-x64 grepit-darwin-arm64; do
+          for pkg in grep4ai-win32-x64 grep4ai-linux-x64 grep4ai-linux-arm64 grep4ai-darwin-x64 grep4ai-darwin-arm64; do
             cp -r artifacts/$pkg/bin npm/$pkg/
             chmod +x npm/$pkg/bin/* 2>/dev/null || true
           done
@@ -147,13 +147,13 @@ jobs:
       - name: Update versions
         run: |
           VERSION=${{ steps.version.outputs.version }}
-          for dir in npm/grepit npm/grepit-win32-x64 npm/grepit-linux-x64 npm/grepit-linux-arm64 npm/grepit-darwin-x64 npm/grepit-darwin-arm64; do
+          for dir in npm/grep4ai npm/grep4ai-win32-x64 npm/grep4ai-linux-x64 npm/grep4ai-linux-arm64 npm/grep4ai-darwin-x64 npm/grep4ai-darwin-arm64; do
             cd $dir
             npm version $VERSION --no-git-tag-version --allow-same-version
             cd $GITHUB_WORKSPACE
           done
           # Also update optionalDependencies versions in main package
-          cd npm/grepit
+          cd npm/grep4ai
           node -e "
             const pkg = require('./package.json');
             for (const dep of Object.keys(pkg.optionalDependencies || {})) {
@@ -167,7 +167,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          for dir in npm/grepit-win32-x64 npm/grepit-linux-x64 npm/grepit-linux-arm64 npm/grepit-darwin-x64 npm/grepit-darwin-arm64; do
+          for dir in npm/grep4ai-win32-x64 npm/grep4ai-linux-x64 npm/grep4ai-linux-arm64 npm/grep4ai-darwin-x64 npm/grep4ai-darwin-arm64; do
             cd $dir
             npm publish --access public --provenance || echo "Already published, skipping"
             cd $GITHUB_WORKSPACE
@@ -177,5 +177,5 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          cd npm/grepit
+          cd npm/grep4ai
           npm publish --access public --provenance

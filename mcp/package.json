@@ -1,6 +1,6 @@
 {
   "name": "grep4ai-mcp",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "MCP server for grep4ai — AI-native code search",
   "main": "index.js",
   "bin": {

@@ -1,6 +1,6 @@
 {
-  "name": "grep4ai",
-  "version": "0.4.0",
+  "name": "@grep4ai/cli",
+  "version": "0.4.1",
   "description": "The fastest grep tool built for AI agents — structured JSON output, relevance ranking, token budgets",
   "keywords": [
     "grep",
@@ -18,11 +18,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ItzDevoo/grepit"
+    "url": "https://github.com/ItzDevoo/grep4ai"
   },
-  "homepage": "https://github.com/ItzDevoo/grepit#readme",
+  "homepage": "https://github.com/ItzDevoo/grep4ai#readme",
   "bugs": {
-    "url": "https://github.com/ItzDevoo/grepit/issues"
+    "url": "https://github.com/ItzDevoo/grep4ai/issues"
   },
   "bin": {
     "grep4ai": "bin/grepit"
@@ -36,11 +36,11 @@
     "postinstall": "node install.js"
   },
   "optionalDependencies": {
-    "grepit-win32-x64": "0.1.0",
-    "grepit-linux-x64": "0.1.0",
-    "grepit-linux-arm64": "0.1.0",
-    "grepit-darwin-x64": "0.1.0",
-    "grepit-darwin-arm64": "0.1.0"
+    "@grep4ai/win32-x64": "0.4.1",
+    "@grep4ai/linux-x64": "0.4.1",
+    "@grep4ai/linux-arm64": "0.4.1",
+    "@grep4ai/darwin-x64": "0.4.1",
+    "@grep4ai/darwin-arm64": "0.4.1"
   },
   "engines": {
     "node": ">=14"

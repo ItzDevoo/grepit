@@ -11,10 +11,10 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/ItzDevoo/grepit"
+repository = "https://github.com/ItzDevoo/grep4ai"
 description = "The fastest grep tool built for AI agents"
 
 [workspace.dependencies]
