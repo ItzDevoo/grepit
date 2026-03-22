@@ -2,9 +2,9 @@
 //!
 //! Looks similar to ripgrep's default output for debugging/manual use.
 
-use std::io::Write;
-use grepit_context::ContextualMatch;
 use crate::OutputConfig;
+use grepit_context::ContextualMatch;
+use std::io::Write;
 
 /// Write human-readable output with file headers and line numbers.
 pub fn write_human<W: Write>(
@@ -31,7 +31,8 @@ pub fn write_human<W: Write>(
 
         // Print context before
         for (i, line) in m.context_before.iter().enumerate() {
-            let line_num = m.scored.raw.line_number as i64 - m.context_before.len() as i64 + i as i64;
+            let line_num =
+                m.scored.raw.line_number as i64 - m.context_before.len() as i64 + i as i64;
             writeln!(writer, "\x1b[32m{line_num}\x1b[0m-{line}")?;
         }
 

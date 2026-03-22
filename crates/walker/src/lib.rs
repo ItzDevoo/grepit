@@ -3,10 +3,10 @@
 //! Wraps the `ignore` crate (ripgrep's own walker) to provide
 //! a high-performance file discovery pipeline.
 
-mod walk;
 mod filetype;
 mod gitaware;
+mod walk;
 
-pub use walk::{Walker, WalkerConfig, FileEntry};
-pub use filetype::{FileType, classify_file_type};
+pub use filetype::{classify_file_type, FileType};
 pub use gitaware::find_repo_root;
+pub use walk::{FileEntry, Walker, WalkerConfig};

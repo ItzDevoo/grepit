@@ -8,7 +8,9 @@ use clap::Parser;
 /// optimized for AI agent consumption.
 #[derive(Parser, Debug)]
 #[command(name = "grepit", version, about, long_about = None)]
-#[command(after_help = "EXAMPLES:\n  grepit \"fn main\"                    Search for 'fn main' in current directory\n  grepit -f json --pretty Config src/  Search with pretty JSON output\n  grepit --token-budget 2000 TODO      Search with token budget\n  grepit -t rust \"impl.*Display\"       Search only Rust files\n  grepit -F --dedup \"import React\"     Find & deduplicate exact string")]
+#[command(
+    after_help = "EXAMPLES:\n  grepit \"fn main\"                    Search for 'fn main' in current directory\n  grepit -f json --pretty Config src/  Search with pretty JSON output\n  grepit --token-budget 2000 TODO      Search with token budget\n  grepit -t rust \"impl.*Display\"       Search only Rust files\n  grepit -F --dedup \"import React\"     Find & deduplicate exact string"
+)]
 pub struct Args {
     /// The regex pattern to search for.
     #[arg(required = true)]
@@ -19,7 +21,6 @@ pub struct Args {
     pub paths: Vec<String>,
 
     // ── Output Options ──────────────────────────────────────────────
-
     /// Output format: json (default), jsonl, compact, human.
     #[arg(short = 'f', long = "format", default_value = "json")]
     pub format: String,
@@ -33,7 +34,6 @@ pub struct Args {
     pub no_stats: bool,
 
     // ── Search Options ──────────────────────────────────────────────
-
     /// Case-insensitive search.
     #[arg(short = 'i', long = "ignore-case")]
     pub ignore_case: bool,
@@ -79,7 +79,6 @@ pub struct Args {
     pub max_depth: Option<usize>,
 
     // ── Context Options ─────────────────────────────────────────────
-
     /// Lines of context around each match.
     #[arg(short = 'C', long = "context")]
     pub context: Option<usize>,
@@ -97,7 +96,6 @@ pub struct Args {
     pub merge_context: bool,
 
     // ── AI Agent Options ────────────────────────────────────────────
-
     /// Maximum tokens in output (uses heuristic estimation).
     #[arg(long = "token-budget")]
     pub token_budget: Option<u64>,
@@ -119,7 +117,6 @@ pub struct Args {
     pub max_results: usize,
 
     // ── Meta ────────────────────────────────────────────────────────
-
     /// Number of search threads (default: auto-detect).
     #[arg(short = 'j', long = "threads")]
     pub threads: Option<usize>,

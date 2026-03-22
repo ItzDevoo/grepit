@@ -3,10 +3,10 @@
 //! Format: `path:line:match_text`
 //! One match per line, no context, no formatting overhead.
 
-use std::io::Write;
+use crate::OutputConfig;
 use grepit_context::ContextualMatch;
 use grepit_tokens::BudgetEnforcer;
-use crate::OutputConfig;
+use std::io::Write;
 
 /// Write compact output (path:line:match_text).
 pub fn write_compact<W: Write>(

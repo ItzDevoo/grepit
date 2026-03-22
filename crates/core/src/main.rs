@@ -5,8 +5,8 @@
 //! AI-native search with structured JSON output, relevance ranking,
 //! token budget awareness, and smart context windowing.
 
-mod cli;
 mod app;
+mod cli;
 
 use clap::Parser;
 

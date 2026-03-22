@@ -1,9 +1,9 @@
 //! Parallel directory walker wrapping the `ignore` crate.
 
-use std::path::{Path, PathBuf};
-use crossbeam_channel::{Sender, Receiver, bounded};
+use crate::filetype::{classify_file_type, FileType};
+use crossbeam_channel::{bounded, Receiver, Sender};
 use ignore::WalkBuilder;
-use crate::filetype::{FileType, classify_file_type};
+use std::path::{Path, PathBuf};
 
 /// Configuration for the directory walker.
 #[derive(Debug, Clone)]
@@ -131,7 +131,12 @@ impl Walker {
 
     /// Build the underlying ignore walker with our configuration.
     fn build_walker(&self) -> WalkBuilder {
-        let first = self.config.paths.first().map(|p| p.as_path()).unwrap_or(Path::new("."));
+        let first = self
+            .config
+            .paths
+            .first()
+            .map(|p| p.as_path())
+            .unwrap_or(Path::new("."));
         let mut builder = WalkBuilder::new(first);
 
         // Add additional paths

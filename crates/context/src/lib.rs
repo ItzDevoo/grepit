@@ -3,8 +3,8 @@
 //! Extracts surrounding context lines for each match, with support
 //! for merging overlapping regions within the same file.
 
-mod window;
 mod merge;
+mod window;
 
-pub use window::{ContextualMatch, ContextConfig, extract_context};
 pub use merge::merge_overlapping;
+pub use window::{extract_context, ContextConfig, ContextualMatch};

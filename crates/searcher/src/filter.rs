@@ -29,23 +29,8 @@ const NOISY_DIRS: &[&str] = &[
 
 /// File extensions that are typically not useful to search.
 const NOISY_EXTENSIONS: &[&str] = &[
-    "min.js",
-    "min.css",
-    "map",
-    "lock",
-    "sum",
-    "pack",
-    "wasm",
-    "pyc",
-    "pyo",
-    "class",
-    "o",
-    "obj",
-    "so",
-    "dylib",
-    "dll",
-    "exe",
-    "bin",
+    "min.js", "min.css", "map", "lock", "sum", "pack", "wasm", "pyc", "pyo", "class", "o", "obj",
+    "so", "dylib", "dll", "exe", "bin",
 ];
 
 /// Returns true if the path should be skipped based on heuristics.
@@ -76,7 +61,9 @@ mod tests {
 
     #[test]
     fn test_skip_node_modules() {
-        assert!(should_skip_path(&PathBuf::from("project/node_modules/foo/index.js")));
+        assert!(should_skip_path(&PathBuf::from(
+            "project/node_modules/foo/index.js"
+        )));
     }
 
     #[test]

@@ -3,10 +3,10 @@
 //! Ranks matches by combining multiple signals to surface the most
 //! relevant results first — definitions over usages, source over tests.
 
+pub mod dedup;
 mod scorer;
 mod signals;
-pub mod dedup;
 
-pub use scorer::{ScoredMatch, rank_matches, RankConfig};
-pub use signals::SignalSet;
 pub use dedup::deduplicate;
+pub use scorer::{rank_matches, RankConfig, ScoredMatch};
+pub use signals::SignalSet;

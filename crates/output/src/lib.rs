@@ -3,12 +3,12 @@
 //! Provides JSON (default), JSONL (streaming), compact, and human-readable
 //! output formats. JSON is the primary format, optimized for AI agent consumption.
 
-mod json;
-mod jsonl;
 mod compact;
 mod human;
+mod json;
+mod jsonl;
 
-pub use json::{SearchResult, SearchResponse, SearchStats, ContextBlock};
+pub use json::{ContextBlock, SearchResponse, SearchResult, SearchStats};
 
 use grepit_context::ContextualMatch;
 
@@ -31,7 +31,9 @@ impl std::str::FromStr for OutputFormat {
             "jsonl" | "jsonlines" => Ok(Self::JsonLines),
             "compact" => Ok(Self::Compact),
             "human" => Ok(Self::Human),
-            _ => Err(format!("Unknown output format: '{s}'. Expected: json, jsonl, compact, human")),
+            _ => Err(format!(
+                "Unknown output format: '{s}'. Expected: json, jsonl, compact, human"
+            )),
         }
     }
 }
@@ -66,20 +68,24 @@ pub fn write_output<W: Write>(
     config: &OutputConfig,
 ) -> anyhow::Result<()> {
     match config.format {
-        OutputFormat::Json => {
-            json::write_json(
-                writer, matches, files_searched, files_skipped, total_matches,
-                duration_ms, config,
-            )
-        }
-        OutputFormat::JsonLines => {
-            jsonl::write_jsonl(writer, matches, config)
-        }
-        OutputFormat::Compact => {
-            compact::write_compact(writer, matches, config)
-        }
-        OutputFormat::Human => {
-            human::write_human(writer, matches, files_searched, total_matches, duration_ms, config)
-        }
+        OutputFormat::Json => json::write_json(
+            writer,
+            matches,
+            files_searched,
+            files_skipped,
+            total_matches,
+            duration_ms,
+            config,
+        ),
+        OutputFormat::JsonLines => jsonl::write_jsonl(writer, matches, config),
+        OutputFormat::Compact => compact::write_compact(writer, matches, config),
+        OutputFormat::Human => human::write_human(
+            writer,
+            matches,
+            files_searched,
+            total_matches,
+            duration_ms,
+            config,
+        ),
     }
 }

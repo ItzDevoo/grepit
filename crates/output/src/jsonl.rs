@@ -5,10 +5,10 @@
 
 use std::io::Write;
 
+use crate::json::{ContextBlock, SearchResult};
+use crate::OutputConfig;
 use grepit_context::ContextualMatch;
 use grepit_tokens::BudgetEnforcer;
-use crate::OutputConfig;
-use crate::json::{SearchResult, ContextBlock};
 
 /// Write JSONL output (one JSON object per line).
 pub fn write_jsonl<W: Write>(
@@ -16,9 +16,7 @@ pub fn write_jsonl<W: Write>(
     matches: Vec<ContextualMatch>,
     config: &OutputConfig,
 ) -> anyhow::Result<()> {
-    let mut enforcer = config
-        .token_budget
-        .map(BudgetEnforcer::new);
+    let mut enforcer = config.token_budget.map(BudgetEnforcer::new);
 
     for m in &matches {
         let file_type = grepit_searcher::classify_file_type(&m.scored.raw.path);

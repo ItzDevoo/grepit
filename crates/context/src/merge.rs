@@ -1,8 +1,8 @@
 //! Merge overlapping context regions within the same file.
 
 use crate::window::ContextualMatch;
-use std::path::PathBuf;
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 /// Merge overlapping context for matches within the same file.
 /// When two matches are close together, their contexts would overlap —

@@ -76,15 +76,9 @@ impl FileType {
 
 /// Classify a file by its extension.
 pub fn classify_file_type(path: &Path) -> FileType {
-    let ext = path
-        .extension()
-        .and_then(|e| e.to_str())
-        .unwrap_or("");
+    let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
 
-    let filename = path
-        .file_name()
-        .and_then(|f| f.to_str())
-        .unwrap_or("");
+    let filename = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
 
     match ext.to_lowercase().as_str() {
         "rs" => FileType::Rust,
@@ -130,16 +124,34 @@ mod tests {
 
     #[test]
     fn test_classify_common_extensions() {
-        assert_eq!(classify_file_type(&PathBuf::from("main.rs")), FileType::Rust);
-        assert_eq!(classify_file_type(&PathBuf::from("app.py")), FileType::Python);
-        assert_eq!(classify_file_type(&PathBuf::from("index.tsx")), FileType::TypeScript);
-        assert_eq!(classify_file_type(&PathBuf::from("Makefile")), FileType::Unknown);
+        assert_eq!(
+            classify_file_type(&PathBuf::from("main.rs")),
+            FileType::Rust
+        );
+        assert_eq!(
+            classify_file_type(&PathBuf::from("app.py")),
+            FileType::Python
+        );
+        assert_eq!(
+            classify_file_type(&PathBuf::from("index.tsx")),
+            FileType::TypeScript
+        );
+        assert_eq!(
+            classify_file_type(&PathBuf::from("Makefile")),
+            FileType::Unknown
+        );
     }
 
     #[test]
     fn test_dockerfile_detection() {
-        assert_eq!(classify_file_type(&PathBuf::from("Dockerfile")), FileType::Dockerfile);
-        assert_eq!(classify_file_type(&PathBuf::from("Dockerfile.prod")), FileType::Dockerfile);
+        assert_eq!(
+            classify_file_type(&PathBuf::from("Dockerfile")),
+            FileType::Dockerfile
+        );
+        assert_eq!(
+            classify_file_type(&PathBuf::from("Dockerfile.prod")),
+            FileType::Dockerfile
+        );
     }
 
     #[test]

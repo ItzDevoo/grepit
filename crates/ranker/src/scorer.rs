@@ -1,7 +1,7 @@
 //! Relevance scoring algorithm.
 
-use grepit_searcher::RawMatch;
 use crate::signals::SignalSet;
+use grepit_searcher::RawMatch;
 
 /// A match with its computed relevance score.
 #[derive(Debug, Clone)]
@@ -37,13 +37,21 @@ pub fn rank_matches(matches: Vec<RawMatch>, config: &RankConfig) -> Vec<ScoredMa
         .map(|raw| {
             let signals = SignalSet::compute(&raw);
             let score = signals.score();
-            ScoredMatch { raw, score, signals }
+            ScoredMatch {
+                raw,
+                score,
+                signals,
+            }
         })
         .collect();
 
     if config.enabled {
         // Sort by score descending (highest relevance first)
-        scored.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
+        scored.sort_by(|a, b| {
+            b.score
+                .partial_cmp(&a.score)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
     }
 
     // Apply max results limit

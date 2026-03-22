@@ -1,17 +1,17 @@
 //! Application logic — wires all modules together into the search pipeline.
 
+use anyhow::Result;
 use std::path::PathBuf;
 use std::time::Instant;
-use anyhow::Result;
 
-use grepit_walker::{Walker, WalkerConfig};
-use grepit_searcher::{SearchEngine, SearchConfig};
-use grepit_ranker::{rank_matches, RankConfig, deduplicate};
-use grepit_ranker::dedup::DedupConfig;
-use grepit_context::{extract_context, ContextConfig, merge_overlapping};
+use grepit_context::{extract_context, merge_overlapping, ContextConfig};
 use grepit_output::{write_output, OutputConfig, OutputFormat};
+use grepit_ranker::dedup::DedupConfig;
+use grepit_ranker::{deduplicate, rank_matches, RankConfig};
+use grepit_searcher::{SearchConfig, SearchEngine};
+use grepit_walker::{Walker, WalkerConfig};
 
-use crate::cli::{Args, parse_filesize};
+use crate::cli::{parse_filesize, Args};
 
 /// Run the full search pipeline with the given CLI arguments.
 pub fn run(args: Args) -> Result<()> {
@@ -59,7 +59,10 @@ pub fn run(args: Args) -> Result<()> {
     }
 
     // ── 3. Rank results ─────────────────────────────────────────────
-    let output_format: OutputFormat = args.format.parse().map_err(|e: String| anyhow::anyhow!(e))?;
+    let output_format: OutputFormat = args
+        .format
+        .parse()
+        .map_err(|e: String| anyhow::anyhow!(e))?;
     let should_rank = args.rank || (!args.no_rank && output_format == OutputFormat::Json);
 
     let rank_config = RankConfig {
@@ -74,7 +77,10 @@ pub fn run(args: Args) -> Result<()> {
         let dedup_config = DedupConfig::default();
         let result = deduplicate(scored_matches, &dedup_config);
         if args.debug {
-            eprintln!("[grepit] collapsed {} duplicate matches", result.collapsed_count);
+            eprintln!(
+                "[grepit] collapsed {} duplicate matches",
+                result.collapsed_count
+            );
         }
         result.matches
     } else {
@@ -85,7 +91,10 @@ pub fn run(args: Args) -> Result<()> {
     let (before, after) = if let Some(c) = args.context {
         (c, c)
     } else {
-        (args.before_context.unwrap_or(2), args.after_context.unwrap_or(2))
+        (
+            args.before_context.unwrap_or(2),
+            args.after_context.unwrap_or(2),
+        )
     };
 
     let context_config = ContextConfig { before, after };

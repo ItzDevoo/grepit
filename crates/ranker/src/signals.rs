@@ -1,7 +1,7 @@
 //! Individual scoring signals that contribute to match relevance.
 
-use std::path::Path;
 use grepit_searcher::RawMatch;
+use std::path::Path;
 
 /// The set of scoring signals computed for a match.
 #[derive(Debug, Clone, Default)]
@@ -55,7 +55,10 @@ fn compute_word_boundary(raw: &RawMatch) -> f32 {
     let match_end = col + raw.match_text.len();
 
     let left_boundary = col == 0
-        || line.as_bytes().get(col - 1).is_none_or(|&b| !b.is_ascii_alphanumeric() && b != b'_');
+        || line
+            .as_bytes()
+            .get(col - 1)
+            .is_none_or(|&b| !b.is_ascii_alphanumeric() && b != b'_');
     let right_boundary = match_end >= line.len()
         || line
             .as_bytes()
@@ -141,20 +144,48 @@ fn compute_definition_signal(raw: &RawMatch) -> f32 {
     // Common definition patterns across languages
     let def_patterns = [
         // Rust
-        "fn ", "pub fn ", "struct ", "pub struct ", "enum ", "pub enum ",
-        "trait ", "pub trait ", "impl ", "type ", "pub type ", "const ",
-        "pub const ", "static ", "pub static ", "mod ", "pub mod ",
+        "fn ",
+        "pub fn ",
+        "struct ",
+        "pub struct ",
+        "enum ",
+        "pub enum ",
+        "trait ",
+        "pub trait ",
+        "impl ",
+        "type ",
+        "pub type ",
+        "const ",
+        "pub const ",
+        "static ",
+        "pub static ",
+        "mod ",
+        "pub mod ",
         // Python
-        "def ", "class ", "async def ",
+        "def ",
+        "class ",
+        "async def ",
         // JavaScript/TypeScript
-        "function ", "const ", "let ", "var ", "export ", "interface ",
-        "export default ", "export function ", "export class ",
-        "export const ", "export interface ",
+        "function ",
+        "const ",
+        "let ",
+        "var ",
+        "export ",
+        "interface ",
+        "export default ",
+        "export function ",
+        "export class ",
+        "export const ",
+        "export interface ",
         // Go
-        "func ", "type ",
+        "func ",
+        "type ",
         // Java/C++
-        "public class ", "private class ", "protected class ",
-        "public static ", "public interface ",
+        "public class ",
+        "private class ",
+        "protected class ",
+        "public static ",
+        "public interface ",
         // Ruby
         "module ",
     ];

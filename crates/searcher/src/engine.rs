@@ -9,12 +9,12 @@ use std::path::PathBuf;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use anyhow::Result;
-use rayon::prelude::*;
 use memmap2::Mmap;
+use rayon::prelude::*;
 
-use grepit_walker::FileEntry;
 use crate::binary::is_binary;
-use crate::matcher::{RawMatch, find_matches};
+use crate::matcher::{find_matches, RawMatch};
+use grepit_walker::FileEntry;
 
 /// Configuration for the search engine.
 #[derive(Debug, Clone)]
@@ -82,16 +82,14 @@ impl SearchEngine {
 
         let all_matches: Vec<RawMatch> = files
             .par_iter()
-            .flat_map(|entry| {
-                match self.search_file(&entry.path) {
-                    Ok(matches) => {
-                        files_searched.fetch_add(1, Ordering::Relaxed);
-                        matches
-                    }
-                    Err(_) => {
-                        files_skipped.fetch_add(1, Ordering::Relaxed);
-                        Vec::new()
-                    }
+            .flat_map(|entry| match self.search_file(&entry.path) {
+                Ok(matches) => {
+                    files_searched.fetch_add(1, Ordering::Relaxed);
+                    matches
+                }
+                Err(_) => {
+                    files_skipped.fetch_add(1, Ordering::Relaxed);
+                    Vec::new()
                 }
             })
             .collect();

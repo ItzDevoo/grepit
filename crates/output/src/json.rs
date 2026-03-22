@@ -1,10 +1,10 @@
 //! JSON output formatter — the primary output format for AI agents.
 
-use serde::Serialize;
-use std::io::Write;
+use crate::OutputConfig;
 use grepit_context::ContextualMatch;
 use grepit_tokens::BudgetEnforcer;
-use crate::OutputConfig;
+use serde::Serialize;
+use std::io::Write;
 
 /// The top-level JSON response.
 #[derive(Debug, Serialize)]

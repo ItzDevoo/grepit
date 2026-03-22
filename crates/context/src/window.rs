@@ -1,8 +1,8 @@
 //! Fixed and adaptive context extraction.
 
+use grepit_ranker::ScoredMatch;
 use std::collections::HashMap;
 use std::path::PathBuf;
-use grepit_ranker::ScoredMatch;
 
 /// Configuration for context extraction.
 #[derive(Debug, Clone)]
@@ -34,10 +34,7 @@ pub struct ContextualMatch {
 ///
 /// Reads each unique file once and extracts context for all matches in that file.
 /// This is much more efficient than reading each file per-match.
-pub fn extract_context(
-    matches: Vec<ScoredMatch>,
-    config: &ContextConfig,
-) -> Vec<ContextualMatch> {
+pub fn extract_context(matches: Vec<ScoredMatch>, config: &ContextConfig) -> Vec<ContextualMatch> {
     if config.before == 0 && config.after == 0 {
         // No context requested — fast path
         return matches
@@ -118,8 +115,8 @@ pub fn extract_context(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use grepit_searcher::RawMatch;
     use grepit_ranker::SignalSet;
+    use grepit_searcher::RawMatch;
     use std::path::PathBuf;
 
     #[test]
