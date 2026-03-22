@@ -1,0 +1,18 @@
+{
+  "name": "grep4ai-mcp",
+  "version": "0.3.1",
+  "description": "MCP server for grep4ai — AI-native code search",
+  "main": "index.js",
+  "bin": {
+    "grep4ai-mcp": "index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["mcp", "grep", "ai", "search", "code-search"],
+  "author": "CLI Anything",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1"
+  }
+}

@@ -12,5 +12,6 @@ npm/grepit-linux-arm64/bin/
 npm/grepit-darwin-x64/bin/
 npm/grepit-darwin-arm64/bin/
 node_modules/
-package-lock.json
-package.json
+/package-lock.json
+/package.json
+mcp/node_modules/
