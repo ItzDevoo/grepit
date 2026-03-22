@@ -44,6 +44,10 @@ All 9 benchmark runs on the same hardware (M2 MacBook Pro, 16GB RAM):
 
 ## Claude Code MCP Setup
 
+```bash
+claude mcp add grep4ai -- npx @grep4ai/mcp
+```
+
 Add to `~/.claude/settings.json`:
 
 ```json
