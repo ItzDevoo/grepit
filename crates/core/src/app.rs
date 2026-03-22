@@ -34,7 +34,7 @@ pub fn run(args: Args) -> Result<()> {
     let files = walker.collect_files();
 
     if args.debug {
-        eprintln!("[grepit] discovered {} files", files.len());
+        eprintln!("[grep4ai] discovered {} files", files.len());
     }
 
     // ── 2. Configure and run the search engine ──────────────────────
@@ -51,7 +51,7 @@ pub fn run(args: Args) -> Result<()> {
 
     if args.debug {
         eprintln!(
-            "[grepit] found {} matches in {} files ({}ms)",
+            "[grep4ai] found {} matches in {} files ({}ms)",
             search_stats.total_matches,
             search_stats.files_searched,
             start.elapsed().as_millis()
@@ -78,7 +78,7 @@ pub fn run(args: Args) -> Result<()> {
         let result = deduplicate(scored_matches, &dedup_config);
         if args.debug {
             eprintln!(
-                "[grepit] collapsed {} duplicate matches",
+                "[grep4ai] collapsed {} duplicate matches",
                 result.collapsed_count
             );
         }

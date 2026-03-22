@@ -1,7 +1,7 @@
 {
   "name": "grepit-linux-arm64",
   "version": "0.1.0",
-  "description": "grepit native binary for Linux ARM64",
+  "description": "grep4ai native binary for Linux ARM64",
   "os": ["linux"],
   "cpu": ["arm64"],
   "license": "MIT",
@@ -10,6 +10,6 @@
     "url": "https://github.com/ItzDevoo/grepit"
   },
   "files": [
-    "bin/grepit"
+    "bin/grep4ai"
   ]
 }

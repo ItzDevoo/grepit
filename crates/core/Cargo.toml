@@ -6,7 +6,7 @@ license.workspace = true
 description = "The fastest grep tool built for AI agents"
 
 [[bin]]
-name = "grepit"
+name = "grep4ai"
 path = "src/main.rs"
 
 [dependencies]

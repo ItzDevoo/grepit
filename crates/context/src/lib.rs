@@ -1,4 +1,4 @@
-//! Smart context windowing for grepit search results.
+//! Smart context windowing for grep4ai search results.
 //!
 //! Extracts surrounding context lines for each match, with support
 //! for merging overlapping regions within the same file.

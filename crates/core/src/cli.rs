@@ -2,14 +2,14 @@
 
 use clap::Parser;
 
-/// grepit — The fastest grep tool built for AI agents.
+/// grep4ai — The fastest grep tool built for AI agents.
 ///
 /// Searches for PATTERN in files, returning structured, ranked results
 /// optimized for AI agent consumption.
 #[derive(Parser, Debug)]
-#[command(name = "grepit", version, about, long_about = None)]
+#[command(name = "grep4ai", version, about, long_about = None)]
 #[command(
-    after_help = "EXAMPLES:\n  grepit \"fn main\"                    Search for 'fn main' in current directory\n  grepit -f json --pretty Config src/  Search with pretty JSON output\n  grepit --token-budget 2000 TODO      Search with token budget\n  grepit -t rust \"impl.*Display\"       Search only Rust files\n  grepit -F --dedup \"import React\"     Find & deduplicate exact string"
+    after_help = "EXAMPLES:\n  grep4ai \"fn main\"                    Search for 'fn main' in current directory\n  grep4ai -f json --pretty Config src/  Search with pretty JSON output\n  grep4ai --token-budget 2000 TODO      Search with token budget\n  grep4ai -t rust \"impl.*Display\"       Search only Rust files\n  grep4ai -F --dedup \"import React\"     Find & deduplicate exact string"
 )]
 pub struct Args {
     /// The regex pattern to search for.

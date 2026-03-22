@@ -2,7 +2,7 @@
 
 // This script runs at `npm install` time. It resolves the correct
 // platform-specific binary from the optionalDependencies and copies
-// (or symlinks) it into ./bin/grepit so the `"bin"` field works.
+// (or symlinks) it into ./bin/grep4ai so the `"bin"` field works.
 
 "use strict";
 
@@ -27,9 +27,9 @@ function getPlatformPackage() {
 
   if (!pkg) {
     console.error(
-      `grepit: Unsupported platform ${platform}-${arch}.\n` +
+      `grep4ai: Unsupported platform ${platform}-${arch}.\n` +
       `Supported: ${Object.keys(PLATFORMS).join(", ")}\n` +
-      `You can build from source: cargo install grepit`
+      `You can build from source: cargo install grep4ai`
     );
     process.exit(1);
   }
@@ -38,7 +38,7 @@ function getPlatformPackage() {
 }
 
 function getBinaryName() {
-  return os.platform() === "win32" ? "grepit.exe" : "grepit";
+  return os.platform() === "win32" ? "grep4ai.exe" : "grep4ai";
 }
 
 function main() {
@@ -52,10 +52,10 @@ function main() {
     pkgDir = path.dirname(require.resolve(`${pkgName}/package.json`));
   } catch (e) {
     console.error(
-      `grepit: Could not find platform package ${pkgName}.\n` +
+      `grep4ai: Could not find platform package ${pkgName}.\n` +
       `This usually means the optional dependency was not installed.\n` +
       `Try: npm install ${pkgName}\n` +
-      `Or build from source: cargo install grepit`
+      `Or build from source: cargo install grep4ai`
     );
     process.exit(1);
   }
@@ -66,7 +66,7 @@ function main() {
 
   if (!fs.existsSync(sourceBinary)) {
     console.error(
-      `grepit: Binary not found at ${sourceBinary}\n` +
+      `grep4ai: Binary not found at ${sourceBinary}\n` +
       `The platform package may be corrupt. Try reinstalling.`
     );
     process.exit(1);
@@ -85,7 +85,7 @@ function main() {
     fs.chmodSync(targetBinary, 0o755);
   }
 
-  console.log(`grepit: Installed ${pkgName} binary successfully.`);
+  console.log(`grep4ai: Installed ${pkgName} binary successfully.`);
 }
 
 main();

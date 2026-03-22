@@ -3,7 +3,7 @@ name = "grepit-output"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Output formatters for grepit — JSON, JSONL, compact, and human-readable"
+description = "Output formatters for grep4ai — JSON, JSONL, compact, and human-readable"
 
 [dependencies]
 serde = { workspace = true }

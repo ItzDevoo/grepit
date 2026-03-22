@@ -1,4 +1,4 @@
-//! Output formatters for grepit.
+//! Output formatters for grep4ai.
 //!
 //! Provides JSON (default), JSONL (streaming), compact, and human-readable
 //! output formats. JSON is the primary format, optimized for AI agent consumption.

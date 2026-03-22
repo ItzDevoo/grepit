@@ -1,6 +1,6 @@
-//! grepit — The fastest grep tool built for AI agents.
+//! grep4ai — The fastest grep tool built for AI agents.
 //!
-//! Usage: grepit [OPTIONS] <PATTERN> [PATH...]
+//! Usage: grep4ai [OPTIONS] <PATTERN> [PATH...]
 //!
 //! AI-native search with structured JSON output, relevance ranking,
 //! token budget awareness, and smart context windowing.
@@ -14,7 +14,7 @@ fn main() {
     let args = cli::Args::parse();
 
     if let Err(e) = app::run(args) {
-        eprintln!("grepit: {e}");
+        eprintln!("grep4ai: {e}");
         std::process::exit(1);
     }
 }

@@ -11,22 +11,27 @@ const path = require("path");
 const os = require("os");
 const fs = require("fs");
 
-const binaryName = os.platform() === "win32" ? "grepit.exe" : "grepit";
+const binaryName = os.platform() === "win32" ? "grep4ai.exe" : "grep4ai";
 const binaryPath = path.join(__dirname, binaryName);
 
 if (fs.existsSync(binaryPath)) {
   // Native binary exists — exec it directly
-  const result = execFileSync(binaryPath, process.argv.slice(2), {
-    stdio: "inherit",
-    env: process.env,
-  });
+  try {
+    execFileSync(binaryPath, process.argv.slice(2), {
+      stdio: "inherit",
+      env: process.env,
+    });
+  } catch (e) {
+    // execFileSync throws on non-zero exit codes — pass them through
+    process.exit(e.status != null ? e.status : 1);
+  }
 } else {
   console.error(
-    "grepit: Native binary not found.\n" +
+    "grep4ai: Native binary not found.\n" +
     "The postinstall script may not have run. Try:\n" +
-    "  node node_modules/grepit/install.js\n" +
+    "  node node_modules/grep4ai/install.js\n" +
     "Or install from source:\n" +
-    "  cargo install grepit"
+    "  cargo install grep4ai"
   );
   process.exit(1);
 }

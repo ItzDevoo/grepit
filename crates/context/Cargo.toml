@@ -3,7 +3,7 @@ name = "grepit-context"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Smart context windowing for grepit search results"
+description = "Smart context windowing for grep4ai search results"
 
 [dependencies]
 grepit-searcher = { workspace = true }

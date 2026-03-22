@@ -1,7 +1,7 @@
 {
   "name": "grepit-darwin-arm64",
   "version": "0.1.0",
-  "description": "grepit native binary for macOS ARM64 (Apple Silicon)",
+  "description": "grep4ai native binary for macOS ARM64 (Apple Silicon)",
   "os": ["darwin"],
   "cpu": ["arm64"],
   "license": "MIT",
@@ -10,6 +10,6 @@
     "url": "https://github.com/ItzDevoo/grepit"
   },
   "files": [
-    "bin/grepit"
+    "bin/grep4ai"
   ]
 }
