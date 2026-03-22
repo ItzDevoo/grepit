@@ -209,3 +209,140 @@ pub fn write_json<W: Write>(
     writeln!(writer)?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use grep4ai_context::ContextualMatch;
+    use grep4ai_ranker::{ScoredMatch, SignalSet};
+    use grep4ai_searcher::RawMatch;
+    use std::path::PathBuf;
+
+    fn make_contextual_match(path: &str, line: &str, score: f32) -> ContextualMatch {
+        ContextualMatch {
+            scored: ScoredMatch {
+                raw: RawMatch {
+                    path: PathBuf::from(path),
+                    line_number: 1,
+                    column: 1,
+                    line_content: line.to_string(),
+                    match_text: "test".to_string(),
+                    file_line_count: 10,
+                },
+                score,
+                signals: SignalSet::default(),
+            },
+            context_before: vec![],
+            context_after: vec![],
+        }
+    }
+
+    #[test]
+    fn test_greedy_packing_vs_truncation() {
+        // Create matches with varying sizes and scores.
+        // The key insight: greedy packing skips big results that don't fit
+        // and keeps trying smaller ones, unlike simple truncation which stops.
+        let big_line = "x".repeat(300);
+        let matches = vec![
+            make_contextual_match("a.rs", "short line a", 0.9),          // small, fits
+            make_contextual_match("b.rs", &big_line, 0.8),              // BIG, won't fit
+            make_contextual_match("c.rs", "short line c", 0.7),          // small, fits after skip
+            make_contextual_match("d.rs", "short line d", 0.6),          // small, fits after skip
+        ];
+
+        // Budget big enough for ~3 small results but not the big one
+        let config = OutputConfig {
+            token_budget: Some(300),
+            explain: false,
+            ..Default::default()
+        };
+
+        let mut buf = Vec::new();
+        write_json(&mut buf, matches, 10, 0, 4, 100, &config).unwrap();
+        let output: serde_json::Value = serde_json::from_slice(&buf).unwrap();
+
+        let results = output["results"].as_array().unwrap();
+
+        // Greedy packing should include a.rs, skip b.rs (too big), then include c.rs and d.rs
+        // Simple truncation would include a.rs, fail on b.rs, and stop.
+        assert!(
+            results.len() >= 2,
+            "Greedy packing should include at least 2 results (skipping big one), got {}",
+            results.len()
+        );
+
+        // Verify the total relevance score is higher than just the first result
+        let total_score: f64 = results.iter()
+            .map(|r| r["score"].as_f64().unwrap())
+            .sum();
+        assert!(total_score > 0.9, "Total score should exceed first result's score");
+    }
+
+    #[test]
+    fn test_path_separators_normalized() {
+        let match_with_backslash = make_contextual_match(
+            "src\\auth\\login.rs",
+            "pub fn authenticate() {",
+            0.9,
+        );
+
+        let config = OutputConfig {
+            show_stats: false,
+            ..Default::default()
+        };
+
+        let mut buf = Vec::new();
+        write_json(&mut buf, vec![match_with_backslash], 1, 0, 1, 10, &config).unwrap();
+        let output = String::from_utf8(buf).unwrap();
+
+        // Should not contain backslashes in paths
+        let parsed: serde_json::Value = serde_json::from_str(&output).unwrap();
+        let path = parsed["results"][0]["path"].as_str().unwrap();
+        assert!(
+            !path.contains('\\'),
+            "Path should use forward slashes, got: {path}"
+        );
+        assert!(path.contains('/'), "Path should contain forward slashes: {path}");
+    }
+
+    #[test]
+    fn test_search_succeeded_in_stats() {
+        let config = OutputConfig::default();
+        let mut buf = Vec::new();
+        write_json(&mut buf, vec![], 5, 0, 0, 10, &config).unwrap();
+        let output: serde_json::Value = serde_json::from_slice(&buf).unwrap();
+
+        assert_eq!(output["stats"]["search_succeeded"], true);
+    }
+
+    #[test]
+    fn test_token_budget_tolerance() {
+        // Generate many code-like results
+        let matches: Vec<ContextualMatch> = (0..50)
+            .map(|i| {
+                make_contextual_match(
+                    &format!("src/mod{i}.rs"),
+                    &format!("pub fn handler_{i}(req: Request) -> Response {{"),
+                    0.5,
+                )
+            })
+            .collect();
+
+        let budget = 1000u64;
+        let config = OutputConfig {
+            token_budget: Some(budget),
+            ..Default::default()
+        };
+
+        let mut buf = Vec::new();
+        write_json(&mut buf, matches, 50, 0, 50, 100, &config).unwrap();
+        let output: serde_json::Value = serde_json::from_slice(&buf).unwrap();
+
+        let tokens_used = output["stats"]["tokens_used"].as_u64().unwrap();
+        let max_allowed = (budget as f64 * 1.15) as u64;
+        assert!(
+            tokens_used <= max_allowed,
+            "Token budget {budget} should produce at most {max_allowed} tokens, got {tokens_used}"
+        );
+    }
+}

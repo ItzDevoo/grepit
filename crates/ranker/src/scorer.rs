@@ -129,4 +129,70 @@ mod tests {
         let ranked = rank_matches(matches, &config);
         assert_eq!(ranked.len(), 50);
     }
+
+    #[test]
+    fn test_query_path_boost_authenticate() {
+        // A match in auth/login.rs should score higher than utils/helpers.rs
+        // when the query is "authenticate"
+        let matches = vec![
+            RawMatch {
+                path: PathBuf::from("src/utils/helpers.rs"),
+                line_number: 10,
+                column: 1,
+                line_content: "pub fn authenticate(user: &str) -> bool {".to_string(),
+                match_text: "authenticate".to_string(),
+                file_line_count: 100,
+            },
+            RawMatch {
+                path: PathBuf::from("src/auth/login.rs"),
+                line_number: 10,
+                column: 1,
+                line_content: "pub fn authenticate(user: &str) -> bool {".to_string(),
+                match_text: "authenticate".to_string(),
+                file_line_count: 100,
+            },
+        ];
+
+        let config = RankConfig {
+            query: "authenticate".to_string(),
+            ..Default::default()
+        };
+        let ranked = rank_matches(matches, &config);
+
+        // auth/login.rs should rank higher due to query-path boost
+        assert!(
+            ranked[0].raw.path.to_str().unwrap().contains("auth"),
+            "Expected auth/login.rs to rank first, got: {}",
+            ranked[0].raw.path.display()
+        );
+        assert!(ranked[0].score > ranked[1].score);
+    }
+
+    #[test]
+    fn test_explain_output_contains_signal_names() {
+        let raw = RawMatch {
+            path: PathBuf::from("src/auth/handler.rs"),
+            line_number: 5,
+            column: 1,
+            line_content: "pub fn authenticate(user: &str) -> bool {".to_string(),
+            match_text: "authenticate".to_string(),
+            file_line_count: 100,
+        };
+
+        let signals = SignalSet::compute(&raw, "authenticate");
+        let explanation = signals.explain();
+
+        // Should mention it's a definition
+        assert!(
+            explanation.iter().any(|s| s.contains("definition")),
+            "Expected 'definition' in explanation, got: {:?}",
+            explanation
+        );
+        // Should mention path match
+        assert!(
+            explanation.iter().any(|s| s.contains("path")),
+            "Expected 'path' mention in explanation, got: {:?}",
+            explanation
+        );
+    }
 }
