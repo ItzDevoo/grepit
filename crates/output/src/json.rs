@@ -49,6 +49,7 @@ pub struct TopFile {
 /// Statistics about the search.
 #[derive(Debug, Serialize)]
 pub struct SearchStats {
+    pub search_succeeded: bool,
     pub total_matches: u64,
     pub results_returned: usize,
     pub files_searched: u64,
@@ -59,8 +60,21 @@ pub struct SearchStats {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub token_budget: Option<u64>,
     pub truncated: bool,
+    /// Number of high-relevance results (score > 0.7) that were skipped
+    /// during greedy packing due to token budget constraints.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub skipped_high_relevance_count: u64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub top_files: Option<Vec<TopFile>>,
+}
+
+fn is_zero(v: &u64) -> bool {
+    *v == 0
+}
+
+/// Normalize path separators to forward slashes on all platforms.
+fn normalize_path(path: &std::path::Path) -> String {
+    path.to_string_lossy().replace('\\', "/")
 }
 
 /// Convert contextual matches to JSON search results.
@@ -70,7 +84,7 @@ fn to_search_results(matches: &[ContextualMatch], explain: bool) -> Vec<SearchRe
         .map(|m| {
             let file_type = grep4ai_searcher::classify_file_type(&m.scored.raw.path);
             SearchResult {
-                path: m.scored.raw.path.to_string_lossy().to_string(),
+                path: normalize_path(&m.scored.raw.path),
                 line: m.scored.raw.line_number,
                 column: m.scored.raw.column,
                 match_text: m.scored.raw.match_text.clone(),
@@ -99,7 +113,7 @@ fn to_search_results(matches: &[ContextualMatch], explain: bool) -> Vec<SearchRe
 fn compute_top_files(matches: &[ContextualMatch], limit: usize) -> Vec<TopFile> {
     let mut counts: HashMap<String, u64> = HashMap::new();
     for m in matches {
-        let path = m.scored.raw.path.to_string_lossy().to_string();
+        let path = normalize_path(&m.scored.raw.path);
         *counts.entry(path).or_insert(0) += 1;
     }
 
@@ -138,6 +152,7 @@ pub fn write_json<W: Write>(
     let mut results = to_search_results(&matches, config.explain);
     let mut truncated = false;
     let mut tokens_used: Option<u64> = None;
+    let mut skipped_high_relevance_count: u64 = 0;
 
     // Apply token budget with greedy packing
     if let Some(budget) = config.token_budget {
@@ -152,6 +167,10 @@ pub fn write_json<W: Write>(
                 kept.push(result);
             } else {
                 truncated = true;
+                // Track when important results are dropped
+                if result.score > 0.7 {
+                    skipped_high_relevance_count += 1;
+                }
                 // Don't break — keep trying remaining results (greedy packing)
             }
         }
@@ -163,6 +182,7 @@ pub fn write_json<W: Write>(
     let response = SearchResponse {
         stats: if config.show_stats {
             Some(SearchStats {
+                search_succeeded: true,
                 total_matches,
                 results_returned: results.len(),
                 files_searched,
@@ -171,6 +191,7 @@ pub fn write_json<W: Write>(
                 tokens_used,
                 token_budget: config.token_budget,
                 truncated,
+                skipped_high_relevance_count,
                 top_files,
             })
         } else {

@@ -21,7 +21,7 @@ pub fn write_jsonl<W: Write>(
     for m in &matches {
         let file_type = grep4ai_searcher::classify_file_type(&m.scored.raw.path);
         let result = SearchResult {
-            path: m.scored.raw.path.to_string_lossy().to_string(),
+            path: m.scored.raw.path.to_string_lossy().replace('\\', "/"),
             line: m.scored.raw.line_number,
             column: m.scored.raw.column,
             match_text: m.scored.raw.match_text.clone(),
