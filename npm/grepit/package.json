@@ -18,11 +18,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cli-anything/grepit"
+    "url": "https://github.com/ItzDevoo/grepit"
   },
-  "homepage": "https://github.com/cli-anything/grepit#readme",
+  "homepage": "https://github.com/ItzDevoo/grepit#readme",
   "bugs": {
-    "url": "https://github.com/cli-anything/grepit/issues"
+    "url": "https://github.com/ItzDevoo/grepit/issues"
   },
   "bin": {
     "grepit": "bin/grepit"

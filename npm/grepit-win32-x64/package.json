@@ -7,7 +7,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cli-anything/grepit"
+    "url": "https://github.com/ItzDevoo/grepit"
   },
   "files": [
     "bin/grepit.exe"

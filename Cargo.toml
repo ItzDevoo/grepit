@@ -14,7 +14,7 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/cli-anything/grepit"
+repository = "https://github.com/ItzDevoo/grepit"
 description = "The fastest grep tool built for AI agents"
 
 [workspace.dependencies]
