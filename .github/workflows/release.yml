@@ -163,7 +163,7 @@ jobs:
         run: |
           for dir in npm/grepit-win32-x64 npm/grepit-linux-x64 npm/grepit-linux-arm64 npm/grepit-darwin-x64 npm/grepit-darwin-arm64; do
             cd $dir
-            npm publish --access public
+            npm publish --access public --provenance
             cd $GITHUB_WORKSPACE
           done
 
@@ -172,4 +172,4 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd npm/grepit
-          npm publish --access public
+          npm publish --access public --provenance
