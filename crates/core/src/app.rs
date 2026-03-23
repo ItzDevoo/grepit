@@ -77,9 +77,16 @@ pub fn run(args: Args) -> Result<u64> {
     };
     let should_rank = args.rank || (!args.no_rank && output_format == OutputFormat::Json);
 
+    // For files-only and count modes, don't truncate matches in the ranker —
+    // we need all matches to collect unique file paths, then limit in the output layer.
+    let ranker_max = match output_format {
+        OutputFormat::FilesOnly | OutputFormat::Count => None,
+        _ => Some(args.max_results),
+    };
+
     let rank_config = RankConfig {
         enabled: should_rank,
-        max_results: Some(args.max_results),
+        max_results: ranker_max,
         query: args.pattern.clone(),
     };
 

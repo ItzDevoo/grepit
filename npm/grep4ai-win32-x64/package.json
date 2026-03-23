@@ -1,6 +1,6 @@
 {
   "name": "@grep4ai/win32-x64",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "grep4ai native binary for Windows x64",
   "os": ["win32"],
   "cpu": ["x64"],
