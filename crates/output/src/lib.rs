@@ -100,10 +100,7 @@ pub fn write_output<W: Write>(
 }
 
 /// Write only unique file paths, one per line.
-fn write_files_only<W: Write>(
-    writer: &mut W,
-    matches: Vec<ContextualMatch>,
-) -> anyhow::Result<()> {
+fn write_files_only<W: Write>(writer: &mut W, matches: Vec<ContextualMatch>) -> anyhow::Result<()> {
     let mut seen = std::collections::HashSet::new();
     for m in &matches {
         let path = m.scored.raw.path.display().to_string();
