@@ -220,6 +220,21 @@ fn compute_line_position(raw: &RawMatch) -> f32 {
     }
 }
 
+/// Check if the match text appears on the left-hand side of an assignment.
+/// For `const foo = useState(...)`, "foo" is LHS (definition) and "useState" is RHS (usage).
+fn is_match_on_lhs(line: &str, match_text: &str) -> bool {
+    if let Some(eq_pos) = line.find('=') {
+        // Don't match ==, =>, etc.
+        let after_eq = line.as_bytes().get(eq_pos + 1);
+        let is_assignment = after_eq.is_none_or(|&b| b != b'=' && b != b'>');
+        if is_assignment {
+            let lhs = &line[..eq_pos];
+            return lhs.contains(match_text);
+        }
+    }
+    false
+}
+
 /// Heuristic check if a line looks like a definition.
 ///
 /// Improved: checks that definition keywords appear at the START of the
@@ -314,11 +329,17 @@ fn compute_definition_signal(raw: &RawMatch) -> f32 {
     }
 
     // JS/TS variable declarations that are definitions (const/let/var at start of line)
-    // Only count if they also have an assignment
+    // Only count as definition if the match_text is the name being defined,
+    // not something on the RHS of the assignment (e.g. `const x = useState()` —
+    // `useState` is a usage, `x` is the definition).
     if (line.starts_with("const ") || line.starts_with("let ") || line.starts_with("var "))
         && line.contains('=')
     {
-        return 0.8;
+        if is_match_on_lhs(line, &raw.match_text) {
+            return 0.8;
+        }
+        // match_text is on the RHS — this is a usage, not a definition
+        return 0.15;
     }
 
     // Export default with assignment
@@ -333,7 +354,10 @@ fn compute_definition_signal(raw: &RawMatch) -> f32 {
         || line.contains("= () =>")
         || line.contains("= async (")
     {
-        return 0.6;
+        if is_match_on_lhs(line, &raw.match_text) {
+            return 0.6;
+        }
+        return 0.15;
     }
 
     // Rust attribute macros that define items (#[derive], #[test], etc.)

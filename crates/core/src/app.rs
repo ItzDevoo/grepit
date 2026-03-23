@@ -131,6 +131,7 @@ pub fn run(args: Args) -> Result<u64> {
         show_stats: !args.no_stats,
         token_budget: args.token_budget,
         explain: args.explain,
+        max_results: Some(args.max_results),
     };
 
     let mut stdout = std::io::stdout().lock();
