@@ -1,6 +1,6 @@
 {
   "name": "@grep4ai/cli",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "The fastest grep tool built for AI agents — structured JSON output, relevance ranking, token budgets",
   "keywords": [
     "grep",
@@ -37,11 +37,11 @@
     "postinstall": "node install.js && node postinstall-msg.js"
   },
   "optionalDependencies": {
-    "@grep4ai/win32-x64": "0.4.4",
-    "@grep4ai/linux-x64": "0.4.4",
-    "@grep4ai/linux-arm64": "0.4.4",
-    "@grep4ai/darwin-x64": "0.4.4",
-    "@grep4ai/darwin-arm64": "0.4.4"
+    "@grep4ai/win32-x64": "0.4.5",
+    "@grep4ai/linux-x64": "0.4.5",
+    "@grep4ai/linux-arm64": "0.4.5",
+    "@grep4ai/darwin-x64": "0.4.5",
+    "@grep4ai/darwin-arm64": "0.4.5"
   },
   "engines": {
     "node": ">=14"

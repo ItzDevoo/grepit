@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__grep4ai__search",
+      "mcp__grep4ai__find_definitions",
+      "Bash(grep:*)"
+    ]
+  }
+}

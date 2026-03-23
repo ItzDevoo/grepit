@@ -50,6 +50,8 @@ pub struct OutputConfig {
     pub token_budget: Option<u64>,
     /// Include signal breakdown explaining why each result ranked where it did.
     pub explain: bool,
+    /// Maximum number of entries for files-only and count modes.
+    pub max_results: Option<usize>,
 }
 
 impl Default for OutputConfig {
@@ -60,6 +62,7 @@ impl Default for OutputConfig {
             show_stats: true,
             token_budget: None,
             explain: false,
+            max_results: None,
         }
     }
 }
@@ -94,25 +97,41 @@ pub fn write_output<W: Write>(
             duration_ms,
             config,
         ),
-        OutputFormat::FilesOnly => write_files_only(writer, matches),
-        OutputFormat::Count => write_count(writer, matches),
+        OutputFormat::FilesOnly => write_files_only(writer, matches, config.max_results),
+        OutputFormat::Count => write_count(writer, matches, config.max_results),
     }
 }
 
 /// Write only unique file paths, one per line.
-fn write_files_only<W: Write>(writer: &mut W, matches: Vec<ContextualMatch>) -> anyhow::Result<()> {
+/// Respects `max_results` to cap the number of unique paths emitted.
+fn write_files_only<W: Write>(
+    writer: &mut W,
+    matches: Vec<ContextualMatch>,
+    max_results: Option<usize>,
+) -> anyhow::Result<()> {
     let mut seen = std::collections::HashSet::new();
+    let mut count = 0usize;
+    let limit = max_results.unwrap_or(usize::MAX);
     for m in &matches {
         let path = m.scored.raw.path.display().to_string();
         if seen.insert(path.clone()) {
             writeln!(writer, "{path}")?;
+            count += 1;
+            if count >= limit {
+                break;
+            }
         }
     }
     Ok(())
 }
 
 /// Write match counts grouped by file.
-fn write_count<W: Write>(writer: &mut W, matches: Vec<ContextualMatch>) -> anyhow::Result<()> {
+/// Respects `max_results` to cap the number of file entries emitted.
+fn write_count<W: Write>(
+    writer: &mut W,
+    matches: Vec<ContextualMatch>,
+    max_results: Option<usize>,
+) -> anyhow::Result<()> {
     let mut counts: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
     let mut order: Vec<String> = Vec::new();
     for m in &matches {
@@ -123,7 +142,8 @@ fn write_count<W: Write>(writer: &mut W, matches: Vec<ContextualMatch>) -> anyho
         });
         *entry += 1;
     }
-    for path in &order {
+    let limit = max_results.unwrap_or(usize::MAX);
+    for path in order.iter().take(limit) {
         writeln!(writer, "{}:{}", path, counts[path])?;
     }
     Ok(())

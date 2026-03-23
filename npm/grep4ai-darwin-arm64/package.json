@@ -1,6 +1,6 @@
 {
   "name": "@grep4ai/darwin-arm64",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "grep4ai native binary for macOS ARM64 (Apple Silicon)",
   "os": ["darwin"],
   "cpu": ["arm64"],
