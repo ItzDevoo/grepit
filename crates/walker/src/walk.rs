@@ -133,10 +133,9 @@ impl Walker {
                 // Apply type filters (resolve aliases like "js" → "javascript")
                 if !include_types.is_empty()
                     && !include_types.iter().any(|t| {
-                        resolve_type_alias(t)
-                            .map_or(t.as_str() == file_type.name(), |resolved| {
-                                resolved == file_type.name()
-                            })
+                        resolve_type_alias(t).map_or(t.as_str() == file_type.name(), |resolved| {
+                            resolved == file_type.name()
+                        })
                     })
                 {
                     return ignore::WalkState::Continue;
